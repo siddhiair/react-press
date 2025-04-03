@@ -11,6 +11,10 @@ const Searchbar = () => {
     setIsSearchOpen(!isSearchOpen);
   }, [isSearchOpen]);
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+  };
+
   return (
     <div className="grow">
       {/** Searchbox toggle button for small devices **/}
@@ -30,6 +34,7 @@ const Searchbar = () => {
         className={`relative ${styles.searchForm}  ${
           isSearchOpen === true ? styles.searchFormVisible : ""
         }`}
+        onSubmit={handleSubmit}
       >
         <div className="relative">
           <input
