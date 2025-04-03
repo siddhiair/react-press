@@ -1,0 +1,9 @@
+.welcomeMessage {
+  min-height: calc(100vh - 50px);
+}
+
+@media screen and (min-width: 640px) {
+  .welcomeMessage {
+    min-height: calc(100vh - 60px);
+  }
+}
