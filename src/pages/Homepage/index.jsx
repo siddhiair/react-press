@@ -1,13 +1,27 @@
-import React, { useState } from "react";
-import Header from "../../components/header";
+import React from "react";
 import WelcomeMessage from "../../components/welcome";
+import { useAppContext } from "../../hooks/useAppContext";
 
 const Homepage = () => {
-  const [posts, setPosts] = useState();
+  const { posts, loading, error } = useAppContext();
+
+  if (loading) {
+    return (
+      <div className="container py-4">
+        <h1>Loading...</h1>
+      </div>
+    );
+  }
+  if (error) {
+    return (
+      <div className="container py-4">
+        <h1>Error: {error.message}</h1>
+      </div>
+    );
+  }
+
   return (
     <div>
-      <Header />
-
       <div className="container py-4">
         <main className="">
           {posts?.length > 0 ? (

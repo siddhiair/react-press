@@ -1,18 +1,53 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import styles from "../../styles/Searchbar.module.css";
 import { FiSearch } from "react-icons/fi";
 import { CgClose } from "react-icons/cg";
+import useFetch from "../../hooks/useFetch";
+import { useAppContext } from "../../hooks/useAppContext";
 
 const Searchbar = () => {
-  const [query, setQuery] = useState("");
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [inputUrl, setInputUrl] = useState("");
+  const [apiUrl, setApiUrl] = useState("");
+  const { setPosts, setLoading, setError } = useAppContext();
+
+  const { data, error } = useFetch(apiUrl);
 
   const toggleSearch = useCallback(() => {
     setIsSearchOpen(!isSearchOpen);
   }, [isSearchOpen]);
 
+  const getHostName = (inputUrl) => {
+    try {
+      const url = new URL(inputUrl); // Parse the input URL
+      return `${url.protocol}//${url.hostname}`; // Extract the root domain (protocol + hostname)
+    } catch (error) {
+      console.error("Invalid URL:", error);
+      return null;
+    }
+  };
+
+  useEffect(() => {
+    if (data) {
+      setPosts(data);
+      setLoading(false);
+    }
+  }, [data, setPosts, setLoading]);
+
+  useEffect(() => {
+    if (error) {
+      setError(error);
+      setLoading(false);
+    }
+  }, [error, setError, setLoading]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (!inputUrl) return;
+
+    const formattedUrl = `${getHostName(inputUrl)}/wp-json/wp/v2/posts`;
+    setApiUrl(formattedUrl);
+    setLoading(true);
   };
 
   return (
@@ -41,8 +76,8 @@ const Searchbar = () => {
             type="search"
             className="bg-white p-2 rounded-sm border sm:border-transparent w-full focus:outline-0 focus:border-primary text-gray-900"
             placeholder="Enter WordPress powered website URL"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            value={inputUrl}
+            onChange={(e) => setInputUrl(e.target.value)}
             aria-label="Search"
           />
           <button

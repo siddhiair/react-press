@@ -1,8 +1,14 @@
 import "./App.css";
 import Homepage from "./pages/Homepage";
+import Header from "./components/Header";
 
 function App() {
-  return <Homepage />;
+  return (
+    <>
+      <Header />
+      <Homepage />
+    </>
+  );
 }
 
 export default App;
